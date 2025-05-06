@@ -152,7 +152,7 @@ EXPOSE 80</code></pre>
     
     <p><strong>Backend Dockerfile:</strong></p>
     <pre><code class="language-dockerfile">FROM eclipse-temurin:17-jre
-COPY build/libs/your-springboot-app.jar /app.jar
+COPY build/libs/mindfull-back.jar /app.jar
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "/app.jar"]</code></pre>
     
@@ -174,7 +174,7 @@ spec:
     spec:
       containers:
       - name: angular
-        image: your-registry/angular-app:latest
+        image: skylinkpi/minfull-front:latest
         ports:
         - containerPort: 80
         resources:
@@ -202,7 +202,7 @@ spec:
     spec:
       containers:
       - name: springboot
-        image: your-registry/springboot-app:latest
+        image: skylinkpi/mindfull-back:latest
         ports:
         - containerPort: 8080
         envFrom:
