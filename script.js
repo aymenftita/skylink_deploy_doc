@@ -162,27 +162,24 @@ function exportToPDF() {
     });
 }
 
-// DOCX Export Functionality
-document.getElementById('docxExportBtn').addEventListener('click', exportToDOCX);
 
-async function exportToDOCX() {
+document.getElementById('docxExportBtn').addEventListener('click', exportToDocx);
+
+async function exportToDocx() {
     const btn = document.getElementById('docxExportBtn');
     const originalText = btn.innerHTML;
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating...';
     btn.disabled = true;
 
     try {
-        // Import the docx library dynamically (better for performance)
-        const { Document, Paragraph, TextRun, HeadingLevel, Packer } = docx;
-
         // Get the main content element
-        const contentElement = document.querySelector('.documentation-content');
+        const element = document.querySelector('.documentation-content');
         
         // Create a new document
-        const doc = new Document({
+        const doc = new docx.Document({
             styles: {
                 paragraphStyles: [{
-                    id: "normal",
+                    id: "Normal",
                     name: "Normal",
                     run: {
                         size: 24, // 12pt
@@ -193,31 +190,78 @@ async function exportToDOCX() {
                             line: 276, // 1.15 line spacing
                         }
                     }
-                }],
+                }]
             },
             sections: [{
                 properties: {},
-                children: await convertHTMLToDocx(contentElement)
+                children: await htmlToDocx(element)
             }]
         });
 
         // Generate the DOCX file
-        Packer.toBlob(doc).then(blob => {
+        docx.Packer.toBlob(doc).then(blob => {
             saveAs(blob, "documentation.docx");
         });
     } catch (error) {
         console.error("Error generating DOCX:", error);
-        alert("Error generating DOCX file. Please try again.");
+        alert("Error generating document. Please try again.");
+    } finally {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+    }
+}
+/********************************************************* */
+document.getElementById('docxExportBtn').addEventListener('click', exportToDocx);
+
+async function exportToDocx() {
+    const btn = document.getElementById('docxExportBtn');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating...';
+    btn.disabled = true;
+
+    try {
+        // Get the main content element
+        const element = document.querySelector('.documentation-content');
+        
+        // Create a new document
+        const doc = new docx.Document({
+            styles: {
+                paragraphStyles: [{
+                    id: "Normal",
+                    name: "Normal",
+                    run: {
+                        size: 24, // 12pt
+                        font: "Calibri"
+                    },
+                    paragraph: {
+                        spacing: {
+                            line: 276, // 1.15 line spacing
+                        }
+                    }
+                }]
+            },
+            sections: [{
+                properties: {},
+                children: await htmlToDocx(element)
+            }]
+        });
+
+        // Generate the DOCX file
+        docx.Packer.toBlob(doc).then(blob => {
+            saveAs(blob, "documentation.docx");
+        });
+    } catch (error) {
+        console.error("Error generating DOCX:", error);
+        alert("Error generating document. Please try again.");
     } finally {
         btn.innerHTML = originalText;
         btn.disabled = false;
     }
 }
 
-// Helper function to convert HTML to docx elements
-async function convertHTMLToDocx(element) {
-    const { Paragraph, TextRun, HeadingLevel } = docx;
+async function htmlToDocx(element) {
     const children = [];
+    const { Paragraph, TextRun, HeadingLevel } = docx;
     
     // Process all child nodes
     for (const node of element.childNodes) {
@@ -227,7 +271,7 @@ async function convertHTMLToDocx(element) {
             if (text) {
                 children.push(new Paragraph({
                     children: [new TextRun(text)],
-                    style: "normal"
+                    style: "Normal"
                 }));
             }
         } else if (node.nodeType === Node.ELEMENT_NODE) {
@@ -265,40 +309,46 @@ async function convertHTMLToDocx(element) {
                 case 'p':
                     children.push(new Paragraph({
                         children: [new TextRun(textContent)],
-                        style: "normal"
+                        style: "Normal"
                     }));
                     break;
                     
                 case 'ul':
                 case 'ol':
-                    for (const li of node.querySelectorAll('li')) {
-                        if (li.textContent.trim()) {
+                    const items = node.querySelectorAll('li');
+                    for (const item of items) {
+                        if (item.textContent.trim()) {
                             children.push(new Paragraph({
-                                text: li.textContent.trim(),
+                                text: item.textContent.trim(),
                                 bullet: { level: 0 },
-                                style: "normal"
+                                style: "Normal"
                             }));
                         }
                     }
+                    children.push(new Paragraph({ text: "" }));
                     break;
                     
                 case 'pre':
+                case 'code':
                     children.push(new Paragraph({
-                        text: node.textContent,
-                        style: "normal",
+                        text: textContent,
+                        style: "Normal",
                         run: { font: "Courier New" }
                     }));
-                    children.push(new Paragraph({ text: "" })); // Add space after code
+                    children.push(new Paragraph({ text: "" }));
                     break;
                     
-                default:
+                case 'div':
+                case 'section':
                     // Recursively process child elements
-                    const childElements = await convertHTMLToDocx(node);
+                    const childElements = await htmlToDocx(node);
                     children.push(...childElements);
+                    break;
             }
         }
     }
     
     return children;
 }
+
 
