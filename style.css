@@ -655,3 +655,55 @@ tr:nth-child(even) {
 .export-btn i {
     font-size: 1rem;
 }
+/*********************************/
+/* Navigation Styles */
+nav-i {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 2rem;
+    background-color: #fff;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.nav-h {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.nav-h img {
+    height: 42px;
+    width: auto;
+    transition: transform 0.3s ease;
+}
+
+.nav-h img:hover {
+    transform: scale(1.05);
+}
+
+.nav-h h2 {
+    margin: 0;
+    font-size: 1.6rem;
+    color: #2c3e50;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+.nav-link {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+    margin: 0;
+    padding: 50px;
+}
+
+.nav-link li a {
+    text-decoration: none;
+    color: #34495e;
+    font-weight: 500;
+    font-size: 1.05rem;
+}

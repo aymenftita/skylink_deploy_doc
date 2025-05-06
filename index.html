@@ -8,12 +8,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <nav>
-        <div class="nav-header">
+    <nav class="nav-i"> 
+        <div class="nav-h">
             <a href="index.html"><img src="logo.png" alt="Logo" /></a>
             <h2>Skylink</h2>
         </div>
-        <ul class="nav-links">
+        <ul class="nav-link">
             <li><a href="team.html">Meet the team</a></li>
             <li><a href="work.html" >Our Work</a></li>
         </ul>
@@ -23,14 +23,20 @@
         <aside class="sidebar">
             
             <nav class="sidebar-nav">
+
+                <div class="nav-section">
+                    <h3 class="nav-section-title">Architecture</h3>
+                    <ul>
+                        <li><a href="#pa">Architecture</a></li>
+                    </ul>
+                </div>
                 
                 <div class="nav-section">
                     <h3 class="nav-section-title">Deployment</h3>
                     <ul>
                         <li><a href="#dso">Deployment Steps Overview</a></li>
                         <!-- Add other deployment-related links here -->
-                        <li><a href="#pacc">Pod and Container Configuration</a></li>
-                    
+                        <li><a href="#pacc">Pod and Container Configuration</a></li>                   
                     </ul>
                 </div>
                 <div class="nav-section">
@@ -48,9 +54,8 @@
                     <ul>
                         <li><a href="#um">Use Metrics</a></li>
                         <!-- Add other deployment-related links here -->
-                        <li><a href="#abo">Adjust Based On</a></li>
+                        <li><a href="#knf">Kubernetes Networking Flow</a></li>
                         <li><a href="#ar">Additional Recommendations</a></li>
-                    
                     </ul>
                 </div>
             </nav>
@@ -82,6 +87,9 @@
                 <!-- Add this as a new section in the documentation-content article -->
 <section id="kubernetes-deployment" class="doc-section">
     <h2>Kubernetes Deployment</h2>
+    <h3 id="pa" >Architecture</h3>
+    <div style="justify-content: center; align-items: center; display: flex;" ><img style="height: 500px;" src="ap.jpeg"/></div>
+    
     <p>This section covers the deployment process for containerized Angular (frontend) and Spring Boot (backend) applications to a Kubernetes cluster.</p>
     
     <h3 id="dso" >Deployment Steps Overview</h3>
@@ -287,6 +295,16 @@ spec:
         </li>
         <li><strong>Horizontal Pod Autoscaler:</strong> Once stable, consider setting up HPA</li>
     </ul>
+
+    <h3 id="knf" >Kubernetes Networking Flow</h3>
+    <div class="step">
+            <h4 id="pkm" >Let’s say you’ve deployed a frontend, a backend API, and a metrics dashboard in a Kubernetes cluster. You want them available at:</h4>
+            <ul>
+                <li>myapp.com → Frontend</li>
+                <li>myapp.com/api → Backend</li>
+                <li>myapp.com/metrics → Dashboard</li>
+            </ul>
+    </div>
     
     <div class="note">
         <strong id="ar" >Additional Recommendations:</strong>
