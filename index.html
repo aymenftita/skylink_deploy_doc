@@ -47,34 +47,11 @@
                     </ul>
                 </div>
             </nav>
+            <div><h3><a href="team.html" >Meet the team </a></h3></div>
             <div class="sidebar-footer">
                 <p>© 2025 SkyLink. All rights reserved.</p>
                 <p>v1.0.0</p>
             </div>
-            <h3>Team:</h3>
-            <ul>
-                <li>
-                    Aymen Ftita
-                </li>
-                <li>
-                    Mohamed Chiha
-                </li>
-                <li>
-                    Jawher Dhafer
-                </li>
-                <li>
-                    Hadil Hadj Alouane
-                </li>
-                <li>
-                    Amira Ouaz
-                </li>
-                <li>
-                    Noura ElHouda Romdhani
-                </li>
-                <li>
-                    Khaled Hafsia
-                </li>
-            </ul>
         </aside>
 
         <!-- Main Content -->
@@ -84,9 +61,14 @@
                     <i class="fas fa-bars"></i>
                 </button>
                 <h1>Documentation</h1>
-                <button id="pdfExportBtn" class="pdf-export-btn">
-                    <i class="fas fa-file-pdf"></i> Export to PDF
-                </button>
+                <div class="export-buttons">
+                    <button id="pdfExportBtn" class="export-btn">
+                        <i class="fas fa-file-pdf"></i> PDF
+                    </button>
+                    <button id="docxExportBtn" class="export-btn">
+                        <i class="fas fa-file-word"></i> DOCX
+                    </button>
+                </div>
             </div>
 
             <article class="documentation-content">
@@ -313,14 +295,6 @@ spec:
             </article>
 
             <div class="content-footer">
-                <div class="prev-next-buttons">
-                    <button class="btn prev-btn disabled">
-                        <i class="fas fa-arrow-left"></i> Previous
-                    </button>
-                    <button class="btn next-btn">
-                        <a href="team.html" >Next</a> <i class="fas fa-arrow-right"></i>
-                    </button>
-                </div>
                 <p>© 2025 SkyLink. All rights reserved.</p>
             </div>
         </main>
@@ -328,5 +302,7 @@ spec:
 
     <script src="script.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/docx/7.8.2/docx.min.js"></script>
 </body>
 </html>

@@ -411,7 +411,7 @@ pre:hover .copy-btn {
 }
 
 .team-card {
-    background-color: white;
+    background-color: rgb(255, 255, 255);
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     overflow: hidden;
@@ -437,6 +437,7 @@ pre:hover .copy-btn {
 
 .team-info {
     padding: 1.5rem;
+    height: 100px;
 }
 
 .team-info h3 {
@@ -608,4 +609,49 @@ tr:nth-child(even) {
         padding: 0.5rem;
         font-size: 0.9rem;
     }
+}
+/*****************/
+
+/* Export Buttons Container */
+.export-buttons {
+    margin-left: auto;
+    display: flex;
+    gap: 0.5rem;
+}
+
+/* Base Export Button Style */
+.export-btn {
+    padding: 0.5rem 1rem;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+}
+
+/* PDF Button Specific */
+#pdfExportBtn {
+    background-color: #e74c3c;
+}
+
+#pdfExportBtn:hover {
+    background-color: #c0392b;
+}
+
+/* DOCX Button Specific */
+#docxExportBtn {
+    background-color: #2b579a;
+}
+
+#docxExportBtn:hover {
+    background-color: #1e4e8a;
+}
+
+/* Icons */
+.export-btn i {
+    font-size: 1rem;
 }
