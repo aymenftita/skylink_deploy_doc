@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation Template</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="documentation-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <img src="logo.png" style="justify-content: center;" /><h2>Skylink</h2>
+                
+            </div>
+            <nav class="sidebar-nav">
+                
+                <div class="nav-section">
+                    <h3 class="nav-section-title">Deployment</h3>
+                    <ul>
+                        <li><a href="#dso">Deployment Steps Overview</a></li>
+                        <!-- Add other deployment-related links here -->
+                        <li><a href="#pacc">Pod and Container Configuration</a></li>
+                    
+                    </ul>
+                </div>
+                <div class="nav-section">
+                    <h3 class="nav-section-title">Detailed Deployment Steps</h3>
+                    <ul>
+                        <li><a href="#cdi">Create Docker Images</a></li>
+                        <!-- Add other deployment-related links here -->
+                        <li><a href="#km">Kubernetes Manifests</a></li>
+                        <li><a href="#ic">Ingress Controller</a></li>
+                    
+                    </ul>
+                </div>
+                <div class="nav-section">
+                    <h3 class="nav-section-title">Resource Allocation Considerations</h3>
+                    <ul>
+                        <li><a href="#um">Use Metrics</a></li>
+                        <!-- Add other deployment-related links here -->
+                        <li><a href="#abo">Adjust Based On</a></li>
+                        <li><a href="#ar">Additional Recommendations</a></li>
+                    
+                    </ul>
+                </div>
+            </nav>
+            <div class="sidebar-footer">
+                <p>© 2025 SkyLink. All rights reserved.</p>
+                <p>v1.0.0</p>
+            </div>
+            <h3>Team:</h3>
+            <ul>
+                <li>
+                    Aymen Ftita
+                </li>
+                <li>
+                    Mohamed Chiha
+                </li>
+                <li>
+                    Jawher Dhafer
+                </li>
+                <li>
+                    Hadil Hadj Alouane
+                </li>
+                <li>
+                    Amira Ouaz
+                </li>
+                <li>
+                    Noura ElHouda Romdhani
+                </li>
+                <li>
+                    Khaled Hafsia
+                </li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="content">
+            <div class="content-header">
+                <button class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1>Documentation</h1>
+                <button id="pdfExportBtn" class="pdf-export-btn">
+                    <i class="fas fa-file-pdf"></i> Export to PDF
+                </button>
+            </div>
+
+            <article class="documentation-content">
+                <!-- Add this as a new section in the documentation-content article -->
+<section id="kubernetes-deployment" class="doc-section">
+    <h2>Kubernetes Deployment</h2>
+    <p>This section covers the deployment process for containerized Angular (frontend) and Spring Boot (backend) applications to a Kubernetes cluster.</p>
+    
+    <h3 id="dso" >Deployment Steps Overview</h3>
+    <div class="steps-container">
+        <div class="step">
+            <h4 id="cua" >1. Containerize Your Applications</h4>
+            <ul>
+                <li>Create Docker images for both Angular (frontend) and Spring Boot (backend)</li>
+                <li>Push images to a private registry (you can use OpenStack Swift or set up Harbor)</li>
+            </ul>
+        </div>
+        
+        <div class="step">
+            <h4 id="pkm" >2. Prepare Kubernetes Manifests</h4>
+            <ul>
+                <li>Deployment manifests for each service</li>
+                <li>Service manifests for internal/external exposure</li>
+                <li>ConfigMaps/Secrets for configuration</li>
+                <li>Ingress controller for routing traffic</li>
+            </ul>
+        </div>
+        
+        <div class="step">
+            <h4 id="dtyc" >3. Deploy to Your Cluster</h4>
+            <ul>
+                <li>Apply manifests using kubectl or CI/CD pipeline</li>
+                <li>Verify deployment status</li>
+            </ul>
+        </div>
+    </div>
+
+    <h3 id="pacc" >Pod and Container Configuration</h3>
+    <div class="configuration-grid">
+        <div class="config-card">
+            <h4>Frontend (Angular)</h4>
+            <ul>
+                <li><strong>Pods:</strong> Start with 2 pods (for redundancy)</li>
+                <li><strong>Containers per pod:</strong> 1 (Angular app)</li>
+                <li><strong>Resources:</strong>
+                    <ul>
+                        <li>CPU: 0.5 vCPU (500m)</li>
+                        <li>RAM: 512MB-1GB</li>
+                    </ul>
+                </li>
+                <li><strong>Why:</strong> Angular is client-side rendered and generally lightweight</li>
+            </ul>
+            <span style="display:block;" ><a href="why.html" >Details</a></span>
+        </div>
+        
+        <div class="config-card">
+            <h4>Backend (Spring Boot)</h4>
+            <ul>
+                <li><strong>Pods:</strong> Start with 2 pods (for redundancy and load balancing)</li>
+                <li><strong>Containers per pod:</strong> 1 (Spring Boot app)</li>
+                <li><strong>Resources:</strong>
+                    <ul>
+                        <li>CPU: 1-2 vCPU (depending on workload)</li>
+                        <li>RAM: 1-2GB</li>
+                    </ul>
+                </li>
+                <li><strong>Why:</strong> Spring Boot apps often require more resources for JVM overhead and processing</li>
+            </ul>
+            <span style="display:block;" ><a href="why.html" >Details</a></span>
+        </div>
+    </div>
+
+    <h3>Detailed Deployment Steps</h3>
+    
+    <h4 id="cdi" >1. Create Docker Images</h4>
+    <p><strong>Frontend Dockerfile:</strong></p>
+    <pre><code class="language-dockerfile">FROM nginx:alpine
+COPY dist/your-angular-app /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/nginx.conf
+EXPOSE 80</code></pre>
+    
+    <p><strong>Backend Dockerfile:</strong></p>
+    <pre><code class="language-dockerfile">FROM eclipse-temurin:17-jre
+COPY build/libs/your-springboot-app.jar /app.jar
+EXPOSE 8080
+ENTRYPOINT ["java", "-jar", "/app.jar"]</code></pre>
+    
+    <h4 id="km" >2. Kubernetes Manifests</h4>
+    <p><strong>Frontend Deployment:</strong></p>
+    <pre><code class="language-yaml">apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - name: angular
+        image: your-registry/angular-app:latest
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            cpu: "500m"
+            memory: "512Mi"
+          limits:
+            cpu: "1"
+            memory: "1Gi"</code></pre>
+    
+    <p><strong>Backend Deployment:</strong></p>
+    <pre><code class="language-yaml">apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: springboot
+        image: your-registry/springboot-app:latest
+        ports:
+        - containerPort: 8080
+        envFrom:
+        - configMapRef:
+            name: backend-config
+        resources:
+          requests:
+            cpu: "1"
+            memory: "1Gi"
+          limits:
+            cpu: "2"
+            memory: "2Gi"</code></pre>
+    
+    <p><strong>Service for Frontend:</strong></p>
+    <pre><code class="language-yaml">apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+spec:
+  selector:
+    app: frontend
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: NodePort</code></pre>
+    
+    <p><strong>Service for Backend:</strong></p>
+    <pre><code class="language-yaml">apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+spec:
+  selector:
+    app: backend
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080</code></pre>
+    
+    <h4 id="ic" >3. Ingress Controller</h4>
+    <pre><code class="language-yaml">apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: app-ingress
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: frontend-service
+            port:
+              number: 80
+      - path: /api
+        pathType: Prefix
+        backend:
+          service:
+            name: backend-service
+            port:
+              number: 8080</code></pre>
+    
+    <h3>Resource Allocation Considerations</h3>
+    <ul>
+        <li><strong>Start Conservative:</strong> Begin with lower resources and monitor</li>
+        <li id="um" ><strong>Use Metrics:</strong> After deployment, monitor with: <pre><code>kubectl top pods</code></pre></li>
+        <li id="abo" ><strong>Adjust Based On:</strong>
+            <ul>
+                <li>CPU/Memory usage metrics</li>
+                <li>Response times</li>
+                <li>Number of concurrent users</li>
+            </ul>
+        </li>
+        <li><strong>Horizontal Pod Autoscaler:</strong> Once stable, consider setting up HPA</li>
+    </ul>
+    
+    <div class="note">
+        <strong id="ar" >Additional Recommendations:</strong>
+        <ul>
+            <li>Use ConfigMaps/Secrets for environment-specific configuration</li>
+            <li>Implement Health Checks (liveness/readiness probes)</li>
+            <li>Set Up Logging (EFK stack)</li>
+            <li>Consider Monitoring (Prometheus + Grafana)</li>
+            <li>Implement CI/CD for automated deployments</li>
+        </ul>
+    </div>
+</section>
+            </article>
+
+            <div class="content-footer">
+                <div class="prev-next-buttons">
+                    <button class="btn prev-btn disabled">
+                        <i class="fas fa-arrow-left"></i> Previous
+                    </button>
+                    <button class="btn next-btn">
+                        <a href="team.html" >Next</a> <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+                <p>© 2025 SkyLink. All rights reserved.</p>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</body>
+</html>

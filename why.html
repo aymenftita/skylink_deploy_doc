@@ -1,0 +1,212 @@
+<!-- Add this as a new section in your documentation-content article -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Team | Documentation</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="sidebar-header">
+        <img src="logo.png" style="justify-content: center;" /><h2>Skylink</h2>
+        
+    </div>
+<section id="configuration-details" class="doc-section">
+    <h2>Frontend and Backend Configuration Details</h2>
+    <p>Detailed configuration recommendations for Angular (frontend) and Spring Boot (backend) deployments in Kubernetes.</p>
+    
+    <!-- Frontend Configuration Section -->
+    <section id="frontend-config" class="sub-section">
+        <h3>Frontend (Angular) Configuration</h3>
+        
+        <div class="config-detail">
+            <h4>1. Number of Pods: Start with 2 (for redundancy)</h4>
+            <div class="why-box">
+                <h5>Why?</h5>
+                <ul>
+                    <li><strong>High Availability (HA):</strong> If one pod fails, the other can still serve traffic.</li>
+                    <li><strong>Load Balancing:</strong> Kubernetes can distribute traffic across multiple pods.</li>
+                    <li><strong>Rolling Updates:</strong> Allows zero-downtime deployments (one pod updates at a time).</li>
+                </ul>
+            </div>
+            
+            <div class="how-box">
+                <h5>How Kubernetes Handles It:</h5>
+                <ul>
+                    <li>The <code>replicas: 2</code> in the Deployment ensures two identical pods run.</li>
+                    <li>If one crashes, Kubernetes automatically restarts it.</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="config-detail">
+            <h4>2. Containers per Pod: 1 (only Angular app)</h4>
+            <div class="why-box">
+                <h5>Why Not Multiple Containers?</h5>
+                <ul>
+                    <li>Angular is a static Single-Page Application (SPA) served via NGINX.</li>
+                    <li>No need for sidecar containers (unless you need logging, monitoring, or security agents).</li>
+                    <li>Keeping it simple improves performance and maintainability.</li>
+                </ul>
+            </div>
+            
+            <div class="example-box">
+                <h5>Example Pod Structure:</h5>
+                <pre><code class="language-yaml">spec:
+  containers:
+  - name: angular-app
+    image: your-registry/angular:latest
+    ports:
+    - containerPort: 80</code></pre>
+            </div>
+        </div>
+        
+        <div class="config-detail">
+            <h4>3. CPU & RAM Allocation (0.5 vCPU, 512MB-1GB RAM)</h4>
+            <div class="why-box">
+                <h5>Why These Values?</h5>
+                <ul>
+                    <li><strong>NGINX + Angular is Lightweight:</strong> No heavy computation (just serving HTML/JS/CSS).</li>
+                    <li><strong>NGINX is efficient</strong> (~50MB RAM per instance).</li>
+                    <li><strong>Avoid Over-Allocation:</strong> Too much CPU/RAM wastes cluster resources.</li>
+                    <li><strong>Avoid Under-Allocation:</strong> Too little causes throttling or crashes.</li>
+                </ul>
+            </div>
+            
+            <div class="breakdown-box">
+                <h5>Breakdown:</h5>
+                <div class="responsive-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Resource</th>
+                                <th>Request (Guaranteed)</th>
+                                <th>Limit (Max Allowed)</th>
+                                <th>Why?</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>CPU</td>
+                                <td>500m (0.5 vCPU)</td>
+                                <td>1000m (1 vCPU)</td>
+                                <td>NGINX rarely needs full CPU.</td>
+                            </tr>
+                            <tr>
+                                <td>RAM</td>
+                                <td>512Mi</td>
+                                <td>1Gi</td>
+                                <td>JS apps can grow under load; 1Gi is safe.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="how-box">
+                <h5>How Kubernetes Enforces This:</h5>
+                <ul>
+                    <li><strong>Requests:</strong> Kubernetes reserves this much for the pod.</li>
+                    <li><strong>Limits:</strong> Pod cannot exceed this (OOMKilled if it tries).</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Backend Configuration Section -->
+    <section id="backend-config" class="sub-section">
+        <h3>Backend (Spring Boot) Configuration</h3>
+        
+        <div class="config-detail">
+            <h4>1. Number of Pods: Start with 2 (for redundancy & load balancing)</h4>
+            <div class="why-box">
+                <h5>Why?</h5>
+                <ul>
+                    <li><strong>Fault Tolerance:</strong> If one pod crashes, the other handles requests.</li>
+                    <li><strong>Scalability:</strong> More pods = better concurrency handling.</li>
+                    <li><strong>Rolling Updates:</strong> No downtime during deployments.</li>
+                </ul>
+            </div>
+            
+            <div class="how-box">
+                <h5>How Kubernetes Handles It:</h5>
+                <ul>
+                    <li>Two identical pods run (<code>replicas: 2</code>).</li>
+                    <li>Traffic is load-balanced by the Service.</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="config-detail">
+            <h4>2. Containers per Pod: 1 (only Spring Boot app)</h4>
+            <div class="why-box">
+                <h5>Why Not Multiple Containers?</h5>
+                <ul>
+                    <li>Spring Boot is self-contained (embedded Tomcat/Netty).</li>
+                    <li>Sidecars (e.g., logging agents) are optional.</li>
+                    <li>Simpler debugging and resource management.</li>
+                </ul>
+            </div>
+            
+            <div class="example-box">
+                <h5>Example Pod Structure:</h5>
+                <pre><code class="language-yaml">spec:
+  containers:
+  - name: springboot-app
+    image: your-registry/springboot:latest
+    ports:
+    - containerPort: 8080</code></pre>
+            </div>
+        </div>
+        
+        <div class="config-detail">
+            <h4>3. CPU & RAM Allocation (1-2 vCPU, 1-2GB RAM)</h4>
+            <div class="why-box">
+                <h5>Why These Values?</h5>
+                <ul>
+                    <li><strong>JVM Overhead:</strong> Spring Boot runs on Java, which needs:
+                        <ul>
+                            <li>CPU: For request processing, GC cycles.</li>
+                            <li>RAM: JVM heap + metaspace (default ~25% of system RAM).</li>
+                        </ul>
+                    </li>
+                    <li><strong>Database/API Calls:</strong> More CPU helps with concurrent requests.</li>
+                </ul>
+            </div>
+            
+            <div class="breakdown-box">
+                <h5>Breakdown:</h5>
+                <div class="responsive-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Resource</th>
+                                <th>Request (Guaranteed)</th>
+                                <th>Limit (Max Allowed)</th>
+                                <th>Why?</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>CPU</td>
+                                <td>1000m (1 vCPU)</td>
+                                <td>2000m (2 vCPU)</td>
+                                <td>Prevents CPU starvation under load.</td>
+                            </tr>
+                            <tr>
+                                <td>RAM</td>
+                                <td>1Gi</td>
+                                <td>2Gi</td>
+                                <td>JVM needs headroom for heap.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+</section>
+</body>
+</html>
